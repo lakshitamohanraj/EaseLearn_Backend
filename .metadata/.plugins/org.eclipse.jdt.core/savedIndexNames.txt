@@ -1,0 +1,4 @@
+INDEX VERSION 1.132+D:\EaseLearn_project\easelearn\.metadata\.plugins\org.eclipse.jdt.core
+1067094681.index
+1696264553.index
+1865797976.index
