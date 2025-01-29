@@ -17,7 +17,37 @@ import lombok.Data;
 @Table(name="user")
 
 public class User {
-  public Long getId() {
+	@Id
+	  @GeneratedValue(strategy=GenerationType.IDENTITY)
+	  private Long id;
+	  
+	  private String email;
+	  
+	  private String name;
+	  
+	  private String password;
+	  
+	  private UserRole role;
+	  
+
+	 
+	  public User() {
+			
+		}
+	 
+	  
+  public User(Long id, String email, String name, String password, UserRole role) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.name = name;
+		this.password = password;
+		this.role = role;
+		
+	}
+
+
+public Long getId() {
 		return id;
 	}
 
@@ -57,28 +87,5 @@ public class User {
 		this.role = role;
 	}
 
-	public byte[] getImg() {
-		return img;
-	}
-
-	public void setImg(byte[] img) {
-		this.img = img;
-	}
-
-@Id
-  @GeneratedValue(strategy=GenerationType.IDENTITY)
-  private Long id;
-  
-  private String email;
-  
-  private String name;
-  
-  private String password;
-  
-  private UserRole role;
-  
-  @Lob
-  @Column(columnDefinition="longblob")
-  private byte[] img;
   
 }
