@@ -7,14 +7,19 @@ public class AuthResponse {
 	
 	private boolean status;
 	
+	private String role;
+	
+	
+
 	public AuthResponse() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AuthResponse(String jwt, boolean status) {
+	public AuthResponse(String jwt, boolean status,String role) {
 		super();
 		this.jwt = jwt;
 		this.status = status;
+		this.role = role;
 	}
 
 	public String getJwt() {
@@ -33,8 +38,13 @@ public class AuthResponse {
 		this.status = status;
 	}
 
+	public String getRole() {
+		return role;
+	}
 
-	
+	public void setRole(String role) {
+		this.role = role;
+	}
 	
 
 }

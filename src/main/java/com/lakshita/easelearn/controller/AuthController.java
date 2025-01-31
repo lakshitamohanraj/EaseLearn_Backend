@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lakshita.easelearn.config.JwtTokenProvider;
 import com.lakshita.easelearn.entity.User;
+import com.lakshita.easelearn.enums.UserRole;
 import com.lakshita.easelearn.exception.UserException;
 import com.lakshita.easelearn.repository.UserRepository;
 import com.lakshita.easelearn.request.LoginRequest;
@@ -32,14 +34,14 @@ public class AuthController {
 	private PasswordEncoder passwordEncoder;
 	private JwtTokenProvider jwtTokenProvider;
 	private CustomUserDetails customUserDetails;
-//	private CartService cartService;
+
 	
 	public AuthController(UserRepository userRepository,PasswordEncoder passwordEncoder,JwtTokenProvider jwtTokenProvider,CustomUserDetails customUserDetails) {
 		this.userRepository=userRepository;
 		this.passwordEncoder=passwordEncoder;
 		this.jwtTokenProvider=jwtTokenProvider;
 		this.customUserDetails=customUserDetails;
-//		this.cartService=cartService;
+
 	}
 	
 	@PostMapping("/signup")
@@ -48,6 +50,7 @@ public class AuthController {
 		  	String email = user.getEmail();
 	        String password = user.getPassword();
 	        String name = user.getName();
+	       String userRole = user.getRole(); // got user role field
 	        
 	        User isEmailExist=userRepository.findByEmail(email);
 
@@ -63,7 +66,7 @@ public class AuthController {
 			createdUser.setEmail(email);
 			createdUser.setName(name);
 	        createdUser.setPassword(passwordEncoder.encode(password));
-	        
+	        createdUser.setRole(userRole); // saved user role 
 	        
 	        
 	        User savedUser= userRepository.save(createdUser);
@@ -75,14 +78,15 @@ public class AuthController {
 	        
 	        String token = jwtTokenProvider.generateToken(authentication);
 
-	        AuthResponse authResponse= new AuthResponse(token,true);
+	        AuthResponse authResponse= new AuthResponse(token,true,userRole);
 			
-	        return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.OK);
+	        return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.CREATED);
 		
 	}
 	
 	@PostMapping("/signin")
     public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest loginRequest) {
+		
         String username = loginRequest.getEmail();
         String password = loginRequest.getPassword();
         
@@ -91,12 +95,25 @@ public class AuthController {
         Authentication authentication = authenticate(username, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         
+        User user = userRepository.findByEmail(username);
+        
+        if (user == null) {
+            throw new BadCredentialsException("User not found");
+        }
+        
+        System.out.println("Role-----"+user.getRole()+" ------"+user.getEmail());
+        
+        // Extract Role from User Entity
+        String role = user.getRole(); 
         
         String token = jwtTokenProvider.generateToken(authentication);
         AuthResponse authResponse= new AuthResponse();
 		
 		authResponse.setStatus(true);
 		authResponse.setJwt(token);
+		authResponse.setRole(role);
+		
+		System.out.println("Role : "+role);
 		
         return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.OK);
     }
