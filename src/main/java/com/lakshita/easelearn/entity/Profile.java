@@ -10,7 +10,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -20,18 +22,21 @@ import lombok.Data;
 
 
  public class Profile {
-	 @Id
+	  @Id
 	  @GeneratedValue(strategy=GenerationType.IDENTITY)
 	     private Long id;
 		 private String description;
 	 
-		 @OneToMany(mappedBy = "profile",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+		 @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+		 @JoinColumn(name = "profile_id")
 		 private List<Review> reviews;
       
-	    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	    @JoinColumn(name = "profile_id")
 	    private List<Education> education; // has proof
 
-	    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	    @JoinColumn(name = "profile_id")
 	    private List<Experience> experience; // no proof
       
 	    private  String location;
@@ -40,6 +45,9 @@ import lombok.Data;
       private List<String> language;
       
       private LocalDate date_of_join;
+      
+      @OneToOne
+      private Teacher teacher;
 
       
       
@@ -49,7 +57,7 @@ import lombok.Data;
 	}
 
 	public Profile(Long id, String description, List<Review> reviews, List<Education> education,
-			List<Experience> experience, String location, List<String> language, LocalDate date_of_join) {
+			List<Experience> experience, String location, List<String> language, LocalDate date_of_join,Teacher teacher) {
 		super();
 		this.id = id;
 		this.description = description;
@@ -59,6 +67,15 @@ import lombok.Data;
 		this.location = location;
 		this.language = language;
 		this.date_of_join = date_of_join;
+		this.teacher = teacher;
+	}
+
+	public Teacher getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
 	}
 
 	public Long getId() {

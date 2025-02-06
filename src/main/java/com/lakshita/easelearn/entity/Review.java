@@ -31,9 +31,9 @@ public class Review {
 
 	    private String comment;
 
-	    @ManyToOne
-	    @JoinColumn(name = "profile_id", nullable = false)
-	    private Profile profile;
+//	    @ManyToOne
+//	    @JoinColumn(name = "profile_id", nullable = false)
+//	    private Profile profile;
 		
    
 } 

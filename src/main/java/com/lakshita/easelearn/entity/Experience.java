@@ -26,9 +26,9 @@ public class Experience {
 	    private LocalDate endDate;
 
 	
-	    @ManyToOne
-	    @JoinColumn(name = "profile_id", nullable = false)
-	    private Profile profile;
+//	    @ManyToOne
+//	    @JoinColumn(name = "profile_id", nullable = false)
+//	    private Profile profile;
 
 	    
 
@@ -38,15 +38,14 @@ public class Experience {
 		}
 
 
-		public Experience(Long id, String name, String description, LocalDate startDate, LocalDate endDate,
-				Profile profile) {
+		public Experience(Long id, String name, String description, LocalDate startDate, LocalDate endDate) {
 			super();
 			this.id = id;
 			this.name = name;
 			this.description = description;
 			this.startDate = startDate;
 			this.endDate = endDate;
-			this.profile = profile;
+//			this.profile = profile;
 		}
 
 
@@ -100,14 +99,14 @@ public class Experience {
 		}
 
 
-		public Profile getProfile() {
-			return profile;
-		}
-
-
-		public void setProfile(Profile profile) {
-			this.profile = profile;
-		}
-	    
+//		public Profile getProfile() {
+//			return profile;
+//		}
+//
+//
+//		public void setProfile(Profile profile) {
+//			this.profile = profile;
+//		}
+//	    
 	    
 }

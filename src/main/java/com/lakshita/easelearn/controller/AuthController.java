@@ -1,5 +1,7 @@
 package com.lakshita.easelearn.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,9 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lakshita.easelearn.config.JwtTokenProvider;
+import com.lakshita.easelearn.entity.Student;
+import com.lakshita.easelearn.entity.Teacher;
 import com.lakshita.easelearn.entity.User;
 import com.lakshita.easelearn.enums.UserRole;
 import com.lakshita.easelearn.exception.UserException;
+import com.lakshita.easelearn.repository.TeacherRepository;
+import com.lakshita.easelearn.repository.StudentRepository;
 import com.lakshita.easelearn.repository.UserRepository;
 import com.lakshita.easelearn.request.LoginRequest;
 import com.lakshita.easelearn.response.AuthResponse;
@@ -34,13 +40,18 @@ public class AuthController {
 	private PasswordEncoder passwordEncoder;
 	private JwtTokenProvider jwtTokenProvider;
 	private CustomUserDetails customUserDetails;
+	private TeacherRepository teacherRepository;
+	private StudentRepository studentRepository;
 
 	
-	public AuthController(UserRepository userRepository,PasswordEncoder passwordEncoder,JwtTokenProvider jwtTokenProvider,CustomUserDetails customUserDetails) {
+	public AuthController(UserRepository userRepository,PasswordEncoder passwordEncoder,JwtTokenProvider jwtTokenProvider,CustomUserDetails customUserDetails,
+			TeacherRepository teacherRepository,StudentRepository studentRepository) {
 		this.userRepository=userRepository;
 		this.passwordEncoder=passwordEncoder;
 		this.jwtTokenProvider=jwtTokenProvider;
 		this.customUserDetails=customUserDetails;
+		this.teacherRepository = teacherRepository;
+		this.studentRepository = studentRepository;
 
 	}
 	
@@ -70,15 +81,28 @@ public class AuthController {
 	        
 	        
 	        User savedUser= userRepository.save(createdUser);
+	        Long userId = savedUser.getId();
 	        
-//	        cartService.createCart(savedUser);
+	        // Save user in Teacher or Student table
+	        if ("TEACHER".equalsIgnoreCase(userRole)) {
+	            Teacher teacher = new Teacher();
+	            teacher.setName(name);
+	            teacher.setUser(savedUser);
+	            teacherRepository.save(teacher);
+	        } else if ("STUDENT".equalsIgnoreCase(userRole)) {
+	            Student student = new Student();
+	            student.setName(name);
+	            student.setUser(savedUser);
+	            student.setDate_of_join(LocalDate.now());
+	            studentRepository.save(student);
+	        }
 
 	        Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
 	        SecurityContextHolder.getContext().setAuthentication(authentication);
 	        
 	        String token = jwtTokenProvider.generateToken(authentication);
 
-	        AuthResponse authResponse= new AuthResponse(token,true,userRole);
+	        AuthResponse authResponse= new AuthResponse(token,true,userRole,userId); // sending userId 
 			
 	        return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.CREATED);
 		
@@ -97,11 +121,13 @@ public class AuthController {
         
         User user = userRepository.findByEmail(username);
         
+        
         if (user == null) {
             throw new BadCredentialsException("User not found");
         }
         
         System.out.println("Role-----"+user.getRole()+" ------"+user.getEmail());
+        Long userId = user.getId();
         
         // Extract Role from User Entity
         String role = user.getRole(); 
@@ -112,10 +138,11 @@ public class AuthController {
 		authResponse.setStatus(true);
 		authResponse.setJwt(token);
 		authResponse.setRole(role);
+		authResponse.setUserId(userId);
 		
 		System.out.println("Role : "+role);
 		
-        return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.OK);
+        return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.OK); //sending the userID too
     }
 	
 	private Authentication authenticate(String username, String password) {

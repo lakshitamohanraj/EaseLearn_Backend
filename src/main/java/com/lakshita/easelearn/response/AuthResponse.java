@@ -9,17 +9,28 @@ public class AuthResponse {
 	
 	private String role;
 	
+	private Long userId;
+	
 	
 
 	public AuthResponse() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AuthResponse(String jwt, boolean status,String role) {
+	public AuthResponse(String jwt, boolean status,String role,Long userId) {
 		super();
 		this.jwt = jwt;
 		this.status = status;
 		this.role = role;
+		this.userId = userId;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String getJwt() {

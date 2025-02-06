@@ -19,7 +19,6 @@ public class Education {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;         // Degree Name
     private String description;  // Course Details
     private LocalDate startDate;
@@ -30,9 +29,9 @@ public class Education {
     private byte[] proofFile;   // e.g., "IMAGE", "PDF"
     private String proofURL;    // Storage URL of proof document
 
-    @ManyToOne
-    @JoinColumn(name = "profile_id", nullable = false)
-    private Profile profile;
+//    @ManyToOne
+//    @JoinColumn(name = "profile_id", nullable = false)
+//    private Profile profile;
 
     
     
@@ -43,7 +42,7 @@ public class Education {
 
 	 
 	public Education(Long id, String name, String description, LocalDate startDate, LocalDate endDate, boolean verified,
-			byte[] proofFile, String proofURL, Profile profile) {
+			byte[] proofFile, String proofURL) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -53,7 +52,7 @@ public class Education {
 		this.verified = verified;
 		this.proofFile = proofFile;
 		this.proofURL = proofURL;
-		this.profile = profile;
+//		this.profile = profile;
 	}
 
 
@@ -121,13 +120,13 @@ public class Education {
 		this.proofURL = proofURL;
 	}
 
-	public Profile getProfile() {
-		return profile;
-	}
-
-	public void setProfile(Profile profile) {
-		this.profile = profile;
-	}
+//	public Profile getProfile() {
+//		return profile;
+//	}
+//
+//	public void setProfile(Profile profile) {
+//		this.profile = profile;
+//	}
     
     
     
