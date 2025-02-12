@@ -36,8 +36,7 @@ public class Teacher {
      @JoinColumn(name = "user_id", referencedColumnName = "id")
      private User user;
      
-     
-
+    
 	public Teacher() {
 		super();
 		// TODO Auto-generated constructor stub

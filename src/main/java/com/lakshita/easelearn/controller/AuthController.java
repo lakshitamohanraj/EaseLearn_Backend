@@ -140,7 +140,7 @@ public class AuthController {
 		authResponse.setRole(role);
 		authResponse.setUserId(userId);
 		
-		System.out.println("Role : "+role);
+		System.out.println("Role : "+role+" UserID : "+userId);
 		
         return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.OK); //sending the userID too
     }

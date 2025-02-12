@@ -34,19 +34,22 @@ public class ProfileController {
         this.profileRepository = profileRepository;
     }
     
-    @PostMapping("/create/{teacherId}")
+    @PostMapping("/create/{userId}")
     public ResponseEntity<Profile> createProfile(
-        @PathVariable Long teacherId,
+        @PathVariable Long userId,
         @RequestBody Profile profileRequest
     ) {
-        Optional<Teacher> teacherOptional = teacherRepository.findById(teacherId);
-        
+    	System.out.println("Called the request");
+    	System.out.println(profileRequest);
+        Optional<Teacher> teacherOptional = teacherRepository.findByUserId(userId);
+        System.out.print("From SQL" + teacherOptional);
         if (!teacherOptional.isPresent()) {
+        
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
         Teacher teacher = teacherOptional.get();
-
+        System.out.println("Called the request");
         // Create Profile entity
         Profile profile = new Profile();
         profile.setDescription(profileRequest.getDescription());
@@ -83,8 +86,10 @@ public class ProfileController {
         profile.setEducation(educationList);
 //        profile.setExperience(experienceList);
 
+//        profile.setTeacher(teacher); // bidirectional relation so mapped profile with the teacher
         // Link Profile to Teacher
         teacher.setProfile(profile);
+        
         profileRepository.save(profile); // Saves profile along with education & experience
 
         return ResponseEntity.status(HttpStatus.CREATED).body(profile);

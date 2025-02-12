@@ -31,7 +31,7 @@ import lombok.Data;
 		 @JoinColumn(name = "profile_id")
 		 private List<Review> reviews;
       
-	    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
 	    @JoinColumn(name = "profile_id")
 	    private List<Education> education; // has proof
 
@@ -46,8 +46,8 @@ import lombok.Data;
       
       private LocalDate date_of_join;
       
-      @OneToOne
-      private Teacher teacher;
+//      @OneToOne
+//      private Teacher teacher;
 
       
       
@@ -57,7 +57,7 @@ import lombok.Data;
 	}
 
 	public Profile(Long id, String description, List<Review> reviews, List<Education> education,
-			List<Experience> experience, String location, List<String> language, LocalDate date_of_join,Teacher teacher) {
+			List<Experience> experience, String location, List<String> language, LocalDate date_of_join) {
 		super();
 		this.id = id;
 		this.description = description;
@@ -67,16 +67,16 @@ import lombok.Data;
 		this.location = location;
 		this.language = language;
 		this.date_of_join = date_of_join;
-		this.teacher = teacher;
+//		this.teacher = teacher;
 	}
 
-	public Teacher getTeacher() {
-		return teacher;
-	}
+//	public Teacher getTeacher() {
+//		return teacher;
+//	}
 
-	public void setTeacher(Teacher teacher) {
-		this.teacher = teacher;
-	}
+//	public void setTeacher(Teacher teacher) {
+//		this.teacher = teacher;
+//	}
 
 	public Long getId() {
 		return id;
@@ -141,9 +141,6 @@ import lombok.Data;
 	public void setDate_of_join(LocalDate date_of_join) {
 		this.date_of_join = date_of_join;
 	}
-      
-      
-      
       
       
 }

@@ -2,11 +2,13 @@ package com.lakshita.easelearn.entity;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -26,7 +28,9 @@ public class Education {
 
     private boolean verified = false;  // Admin verification
 
-    private byte[] proofFile;   // e.g., "IMAGE", "PDF"
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String proofFile;   // e.g., "IMAGE", "PDF"
     private String proofURL;    // Storage URL of proof document
 
 //    @ManyToOne
@@ -42,7 +46,7 @@ public class Education {
 
 	 
 	public Education(Long id, String name, String description, LocalDate startDate, LocalDate endDate, boolean verified,
-			byte[] proofFile, String proofURL) {
+			String proofFile, String proofURL) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -104,11 +108,11 @@ public class Education {
 		this.verified = verified;
 	}
 
-	public byte[] getProofFile() {
+	public String getProofFile() {
 		return proofFile;
 	}
 
-	public void setProofFile(byte[] proofFile) {
+	public void setProofFile(String proofFile) {
 		this.proofFile = proofFile;
 	}
 
@@ -120,14 +124,7 @@ public class Education {
 		this.proofURL = proofURL;
 	}
 
-//	public Profile getProfile() {
-//		return profile;
-//	}
-//
-//	public void setProfile(Profile profile) {
-//		this.profile = profile;
-//	}
-    
-    
+
+      
     
 }
